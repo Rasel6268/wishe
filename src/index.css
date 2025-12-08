@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-pink-50 via-purple-50 to-rose-50 min-h-screen;
+    font-family: 'Noto Sans Bengali', 'Kalpurush', 'Siyam Rupali', sans-serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply backdrop-blur-lg bg-white/20 border border-white/30 shadow-xl;
+  }
+  
+  .love-vibe-bg {
+    @apply bg-gradient-to-br from-pink-100/20 via-rose-100/20 to-red-100/20;
+  }
+}
+
+/* কাস্টম অ্যানিমেশন */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+.heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+.pattern-dots {
+  background-image: radial-gradient(currentColor 1px, transparent 1px);
+  background-size: calc(10 * 1px) calc(10 * 1px);
+}
+
+.pattern-size-4 {
+  background-size: 4px 4px;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* বাংলা টাইপোগ্রাফি জন্য */
+.bengali-text {
+  font-family: 'Noto Sans Bengali', 'Kalpurush', sans-serif;
+  line-height: 1.8;
+}
+
+/* বড় টেক্সটের জন্য বাংলা ফন্ট */
+.text-4xl, .text-5xl, .text-6xl, .text-8xl {
+  font-family: 'Noto Sans Bengali', 'SolaimanLipi', sans-serif;
+  font-weight: 700;
+}
