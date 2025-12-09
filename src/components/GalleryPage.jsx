@@ -1,70 +1,84 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router";
 
 const BirthdayGallery = () => {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
   const [releasedCards, setReleasedCards] = useState([]);
   const [isBoxVisible, setIsBoxVisible] = useState(true);
+  const [openNextBtn,setOpenNextBtn] = useState(false)
+  const neviagate = useNavigate()
 
   // তানজিনা রিপার জন্মদিনের ছবি
   const birthdayPhotos = [
     {
       id: 1,
-      frontImage: 'https://i.ibb.co.com/HLpNhGWG/474129728-1127587152433395-7534263163797870131-n.jpg',
-      backMessage: 'শুভ জন্মদিন! আপনার দিনটি আনন্দ, হাসি এবং চমৎকার বিস্ময়ে পরিপূর্ণ হোক! 🎂',
-      title: 'জন্মদিনের কেক',
-      color: 'from-pink-500 to-rose-500'
+      frontImage:
+        "https://i.ibb.co.com/HLpNhGWG/474129728-1127587152433395-7534263163797870131-n.jpg",
+      backMessage:
+        "শুভ জন্মদিন! আপনার দিনটি আনন্দ, হাসি এবং চমৎকার বিস্ময়ে পরিপূর্ণ হোক! 🎂",
+      title: "জন্মদিনের কেক",
+      color: "from-pink-500 to-rose-500",
     },
     {
       id: 2,
-      frontImage: 'https://i.ibb.co.com/VcPYZJVj/481099275-1155271662998277-6080231371123247470-n.jpg',
-      backMessage: 'আপনার জন্য অসীম সুখ এবং সাফল্য কামনা! ✨',
-      title: 'বেলুন উদযাপন',
-      color: 'from-blue-500 to-cyan-500'
+      frontImage:
+        "https://i.ibb.co.com/VcPYZJVj/481099275-1155271662998277-6080231371123247470-n.jpg",
+      backMessage: "আপনার জন্য অসীম সুখ এবং সাফল্য কামনা! ✨",
+      title: "বেলুন উদযাপন",
+      color: "from-blue-500 to-cyan-500",
     },
     {
       id: 3,
-      frontImage: 'https://i.ibb.co.com/fdtfdx67/482044962-1156963322829111-6069047737790081898-n.jpg',
-      backMessage: 'এই বছর আপনাকে আপনার স্বপ্ন এবং আকাঙ্ক্ষার কাছাকাছি নিয়ে আসুক! 🌟',
-      title: 'উপহার বক্স',
-      color: 'from-yellow-500 to-orange-500'
+      frontImage:
+        "https://i.ibb.co.com/fdtfdx67/482044962-1156963322829111-6069047737790081898-n.jpg",
+      backMessage:
+        "এই বছর আপনাকে আপনার স্বপ্ন এবং আকাঙ্ক্ষার কাছাকাছি নিয়ে আসুক! 🌟",
+      title: "উপহার বক্স",
+      color: "from-yellow-500 to-orange-500",
     },
     {
       id: 4,
-      frontImage: 'https://i.ibb.co.com/zVQXBJGh/481231811-1156963306162446-3239089265638964953-n.jpg',
-      backMessage: 'আরেক বছরের আশ্চর্যজনক অ্যাডভেঞ্চার এবং স্মৃতির জন্য চিয়ার্স! 🥂',
-      title: 'উদযাপন',
-      color: 'from-purple-500 to-pink-500'
+      frontImage:
+        "https://i.ibb.co.com/zVQXBJGh/481231811-1156963306162446-3239089265638964953-n.jpg",
+      backMessage:
+        "আরেক বছরের আশ্চর্যজনক অ্যাডভেঞ্চার এবং স্মৃতির জন্য চিয়ার্স! 🥂",
+      title: "উদযাপন",
+      color: "from-purple-500 to-pink-500",
     },
     {
       id: 5,
-      frontImage: 'https://i.ibb.co.com/fGNLqqKR/486469917-1173763044482472-7288194406050436565-n.jpg',
-      backMessage: 'আপনার জন্মদিনটি আপনার মতোই বিশেষ এবং চমৎকার হোক! 🎈',
-      title: 'পার্টি টাইম',
-      color: 'from-green-500 to-emerald-500'
+      frontImage:
+        "https://i.ibb.co.com/fGNLqqKR/486469917-1173763044482472-7288194406050436565-n.jpg",
+      backMessage: "আপনার জন্মদিনটি আপনার মতোই বিশেষ এবং চমৎকার হোক! 🎈",
+      title: "পার্টি টাইম",
+      color: "from-green-500 to-emerald-500",
     },
     {
       id: 6,
-      frontImage: 'https://i.ibb.co.com/xtNY99qP/486124404-1173762851149158-8337524529395968051-n.jpg',
-      backMessage: 'সারা জীবন স্থায়ী সুন্দর স্মৃতি তৈরির জন্য এখানে! 📸',
-      title: 'বিশেষ মুহূর্ত',
-      color: 'from-red-500 to-pink-500'
+      frontImage:
+        "https://i.ibb.co.com/xtNY99qP/486124404-1173762851149158-8337524529395968051-n.jpg",
+      backMessage: "সারা জীবন স্থায়ী সুন্দর স্মৃতি তৈরির জন্য এখানে! 📸",
+      title: "বিশেষ মুহূর্ত",
+      color: "from-red-500 to-pink-500",
     },
     {
       id: 7,
-      frontImage: 'https://i.ibb.co.com/m57t1GDX/486185645-1174633461062097-5106493753291045205-n.jpg',
-      backMessage: 'সারা জীবন স্থায়ী সুন্দর স্মৃতি তৈরির জন্য এখানে! 📸',
-      title: 'বিশেষ মুহূর্ত',
-      color: 'from-red-500 to-pink-500'
+      frontImage:
+        "https://i.ibb.co.com/m57t1GDX/486185645-1174633461062097-5106493753291045205-n.jpg",
+      backMessage: "সারা জীবন স্থায়ী সুন্দর স্মৃতি তৈরির জন্য এখানে! 📸",
+      title: "বিশেষ মুহূর্ত",
+      color: "from-red-500 to-pink-500",
     },
     {
       id: 8,
-      frontImage: 'https://i.ibb.co.com/LDYxP4Pz/481079867-1155528276305949-5233794373492214713-n.jpg',
-      backMessage: 'সারা জীবন স্থায়ী সুন্দর স্মৃতি তৈরির জন্য এখানে! 📸',
-      title: 'বিশেষ মুহূর্ত',
-      color: 'from-red-500 to-pink-500'
-    }
+      frontImage:
+        "https://i.ibb.co.com/LDYxP4Pz/481079867-1155528276305949-5233794373492214713-n.jpg",
+      backMessage: "সারা জীবন স্থায়ী সুন্দর স্মৃতি তৈরির জন্য এখানে! 📸",
+      title: "বিশেষ মুহূর্ত",
+      color: "from-red-500 to-pink-500",
+    },
   ];
 
   const containerVariants = {
@@ -73,16 +87,16 @@ const BirthdayGallery = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
+        delayChildren: 0.2,
+      },
+    },
   };
 
   const cardVariants = {
-    hidden: { 
+    hidden: {
       scale: 0,
       rotate: -180,
-      opacity: 0 
+      opacity: 0,
     },
     visible: (i) => ({
       scale: 1,
@@ -94,44 +108,44 @@ const BirthdayGallery = () => {
         type: "spring",
         stiffness: 120,
         damping: 15,
-        delay: i * 0.2 + 0.5
-      }
+        delay: i * 0.2 + 0.5,
+      },
     }),
     hover: {
       scale: 1.1,
       rotate: 0,
       zIndex: 50,
       transition: {
-        duration: 0.3
-      }
-    }
+        duration: 0.3,
+      },
+    },
   };
 
   const flipVariants = {
     front: {
       rotateY: 0,
-      transition: { duration: 0.6 }
+      transition: { duration: 0.6 },
     },
     back: {
       rotateY: 180,
-      transition: { duration: 0.6 }
-    }
+      transition: { duration: 0.6 },
+    },
   };
 
   const boxLidVariants = {
-    closed: { 
+    closed: {
       rotateX: 0,
-      y: 0 
+      y: 0,
     },
-    opening: { 
+    opening: {
       rotateX: -90,
       y: -40,
       transition: {
         type: "spring",
         stiffness: 300,
-        damping: 20
-      }
-    }
+        damping: 20,
+      },
+    },
   };
 
   // কার্ডগুলির অবস্থান গণনা করুন
@@ -140,32 +154,36 @@ const BirthdayGallery = () => {
     const radius = 300;
     return {
       x: Math.cos(angle) * radius,
-      y: Math.sin(angle) * radius
+      y: Math.sin(angle) * radius,
     };
   }
 
   const handleOpenGallery = async () => {
     setIsBoxVisible(false);
-    
+
     // বক্স খুলুন
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
     // একে একে কার্ড ছেড়ে দিন
     for (let i = 0; i < birthdayPhotos.length; i++) {
-      setReleasedCards(prev => [...prev, birthdayPhotos[i].id]);
-      await new Promise(resolve => setTimeout(resolve, 200));
+      setReleasedCards((prev) => [...prev, birthdayPhotos[i].id]);
+      await new Promise((resolve) => setTimeout(resolve, 200));
     }
-    
+
     // সব কার্ড বের হওয়ার পরে বক্স লুকান
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
     setIsGalleryOpen(true);
   };
+  const nextPageHandler = () => {
+      neviagate('/messages')
+  }
 
   const handleCloseGallery = () => {
     setIsGalleryOpen(false);
     setActiveCard(null);
     setReleasedCards([]);
     setIsBoxVisible(true);
+    setOpenNextBtn(true)
   };
 
   const handleCardClick = (id) => {
@@ -191,7 +209,7 @@ const BirthdayGallery = () => {
             transition={{
               type: "spring",
               stiffness: 200,
-              damping: 15
+              damping: 15,
             }}
             className="relative z-10"
           >
@@ -206,18 +224,18 @@ const BirthdayGallery = () => {
                 {/* বক্সের নিচের অংশ */}
                 <div className="absolute inset-0 bg-linear-to-br from-pink-500 to-purple-600 rounded-lg shadow-2xl">
                   <div className="absolute inset-2 bg-linear-to-br from-pink-400 to-purple-500 rounded-md"></div>
-                  
+
                   {/* বক্সের ভিতরে উদ্বোধনী ইফেক্ট */}
                   <div className="absolute inset-4 bg-linear-to-b from-pink-300 to-purple-400 rounded opacity-80">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <motion.div
-                        animate={{ 
+                        animate={{
                           scale: [1, 1.2, 1],
-                          opacity: [0.5, 1, 0.5] 
+                          opacity: [0.5, 1, 0.5],
                         }}
-                        transition={{ 
-                          repeat: Infinity, 
-                          duration: 2 
+                        transition={{
+                          repeat: Infinity,
+                          duration: 2,
                         }}
                         className="text-white text-4xl"
                       >
@@ -226,20 +244,20 @@ const BirthdayGallery = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* খোলার অ্যানিমেশন সহ বক্সের ঢাকনা */}
-                <motion.div 
+                <motion.div
                   variants={boxLidVariants}
                   initial="closed"
                   animate={releasedCards.length > 0 ? "opening" : "closed"}
                   className="absolute inset-0 bg-linear-to-br from-red-500 to-pink-600 rounded-lg shadow-2xl -top-4"
                 >
                   <div className="absolute inset-2 bg-linear-to-br from-red-400 to-pink-500 rounded-md"></div>
-                  
+
                   {/* ফিতা */}
                   <div className="absolute top-1/2 left-0 w-full h-12 bg-linear-to-r from-yellow-400 to-yellow-300 transform -translate-y-1/2 shadow-lg"></div>
                   <div className="absolute left-1/2 top-0 w-12 h-full bg-linear-to-b from-yellow-400 to-yellow-300 transform -translate-x-1/2 shadow-lg"></div>
-                  
+
                   {/* ফিতার বাউ */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     <div className="relative">
@@ -254,7 +272,7 @@ const BirthdayGallery = () => {
               </div>
 
               {/* নির্দেশনা টেক্সট */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
@@ -270,6 +288,22 @@ const BirthdayGallery = () => {
             </motion.div>
           </motion.div>
         )}
+        {
+          openNextBtn && <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 }}
+          whileHover={{
+            scale: 1.05,
+            boxShadow: "0 10px 25px -5px rgba(236, 72, 153, 0.4)",
+          }}
+          whileTap={{ scale: 0.95 }}
+          className="px-8 py-3 my-5 bg-linear-to-r from-pink-600 to-purple-600 text-white font-bold rounded-lg shadow-lg cursor-pointer"
+        >
+          Next
+        </motion.button>
+        }
+        
       </AnimatePresence>
 
       {/* বক্স থেকে বের হওয়া কার্ড */}
@@ -283,9 +317,9 @@ const BirthdayGallery = () => {
             animate={releasedCards.includes(photo.id) ? "visible" : "hidden"}
             whileHover="hover"
             className={`absolute left-1/2 top-1/2 w-48 h-56 md:w-56 md:h-64 cursor-pointer ${photo.color}`}
-            style={{ 
-              marginLeft: '-7rem',
-              marginTop: '-8rem'
+            style={{
+              marginLeft: "-7rem",
+              marginTop: "-8rem",
             }}
             onClick={() => handleCardClick(photo.id)}
           >
@@ -295,15 +329,18 @@ const BirthdayGallery = () => {
                 className="absolute w-full h-full rounded-xl shadow-2xl"
                 style={{
                   transformStyle: "preserve-3d",
-                  transform: activeCard === photo.id ? "rotateY(180deg)" : "rotateY(0deg)"
+                  transform:
+                    activeCard === photo.id
+                      ? "rotateY(180deg)"
+                      : "rotateY(0deg)",
                 }}
                 variants={flipVariants}
                 animate={activeCard === photo.id ? "back" : "front"}
               >
                 {/* কার্ডের সামনের দিক - ছবি */}
-                <div 
+                <div
                   className="absolute w-full h-full backface-hidden rounded-xl overflow-hidden border-4 border-white"
-                  style={{ backfaceVisibility: 'hidden' }}
+                  style={{ backfaceVisibility: "hidden" }}
                 >
                   <img
                     src={photo.frontImage}
@@ -312,24 +349,28 @@ const BirthdayGallery = () => {
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent">
                     <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h3 className="text-xl font-bold text-white mb-1">{photo.title}</h3>
-                      <p className="text-gray-200 text-sm">বার্তা পড়তে ক্লিক করুন</p>
+                      <h3 className="text-xl font-bold text-white mb-1">
+                        {photo.title}
+                      </h3>
+                      <p className="text-gray-200 text-sm">
+                        বার্তা পড়তে ক্লিক করুন
+                      </p>
                     </div>
                   </div>
                   {/* গ্লো ইফেক্ট */}
                   <div className="absolute inset-0 bg-linear-to-tr from-white/10 to-transparent"></div>
-                  
+
                   {/* কার্ডের কোণ ডেকোরেশন */}
                   <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-white/50 rounded-tl-lg"></div>
                   <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-white/50 rounded-tr-lg"></div>
                 </div>
 
                 {/* কার্ডের পিছনের দিক - বার্তা */}
-                <div 
+                <div
                   className="absolute w-full h-full backface-hidden rounded-xl overflow-hidden border-4 border-white"
-                  style={{ 
-                    backfaceVisibility: 'hidden',
-                    transform: 'rotateY(180deg)'
+                  style={{
+                    backfaceVisibility: "hidden",
+                    transform: "rotateY(180deg)",
                   }}
                 >
                   <div className="absolute inset-0 bg-linear-to-br from-pink-500 to-purple-600 p-4 flex items-center justify-center">
@@ -347,7 +388,7 @@ const BirthdayGallery = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* ডেকোরেটিভ কোণ */}
                   <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-white/50 rounded-tl-lg"></div>
                   <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-white/50 rounded-tr-lg"></div>
@@ -386,9 +427,17 @@ const BirthdayGallery = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleCloseGallery}
-                  className="px-6 py-3 bg-linear-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold hover:shadow-lg transition-shadow"
+                  className="px-6 py-3 bg-linear-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold hover:shadow-lg transition-shadow cursor-pointer mr-2"
                 >
                   গ্যালারি বন্ধ করুন
+                </motion.button>
+                 <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={nextPageHandler}
+                  className="px-6 py-3 bg-linear-to-r from-pink-500 to-purple-600 text-white rounded-full font-semibold hover:shadow-lg transition-shadow cursor-pointer"
+                >
+                  Next
                 </motion.button>
               </motion.div>
               <motion.div
@@ -408,9 +457,9 @@ const BirthdayGallery = () => {
                         transition: {
                           type: "spring",
                           stiffness: 100,
-                          damping: 12
-                        }
-                      }
+                          damping: 12,
+                        },
+                      },
                     }}
                     whileHover={{ scale: 1.05 }}
                     className="relative h-80 cursor-pointer"
@@ -422,15 +471,18 @@ const BirthdayGallery = () => {
                         className="absolute w-full h-full rounded-2xl shadow-2xl"
                         style={{
                           transformStyle: "preserve-3d",
-                          transform: activeCard === photo.id ? "rotateY(180deg)" : "rotateY(0deg)"
+                          transform:
+                            activeCard === photo.id
+                              ? "rotateY(180deg)"
+                              : "rotateY(0deg)",
                         }}
                         variants={flipVariants}
                         animate={activeCard === photo.id ? "back" : "front"}
                       >
                         {/* কার্ডের সামনের দিক - ছবি */}
-                        <div 
+                        <div
                           className="absolute w-full h-full backface-hidden rounded-2xl overflow-hidden border-4 border-white"
-                          style={{ backfaceVisibility: 'hidden' }}
+                          style={{ backfaceVisibility: "hidden" }}
                         >
                           <img
                             src={photo.frontImage}
@@ -439,18 +491,22 @@ const BirthdayGallery = () => {
                           />
                           <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent">
                             <div className="absolute bottom-0 left-0 right-0 p-6">
-                              <h3 className="text-2xl font-bold text-white mb-2">{photo.title}</h3>
-                              <p className="text-gray-200">বার্তা পড়তে ক্লিক করুন</p>
+                              <h3 className="text-2xl font-bold text-white mb-2">
+                                {photo.title}
+                              </h3>
+                              <p className="text-gray-200">
+                                বার্তা পড়তে ক্লিক করুন
+                              </p>
                             </div>
                           </div>
                         </div>
 
                         {/* কার্ডের পিছনের দিক - বার্তা */}
-                        <div 
+                        <div
                           className="absolute w-full h-full backface-hidden rounded-2xl overflow-hidden border-4 border-white"
-                          style={{ 
-                            backfaceVisibility: 'hidden',
-                            transform: 'rotateY(180deg)'
+                          style={{
+                            backfaceVisibility: "hidden",
+                            transform: "rotateY(180deg)",
                           }}
                         >
                           <div className="absolute inset-0 bg-linear-to-br from-pink-500 to-purple-600 p-6 flex items-center justify-center">
@@ -505,25 +561,25 @@ const BirthdayGallery = () => {
             {[...Array(20)].map((_, i) => (
               <motion.div
                 key={i}
-                initial={{ 
+                initial={{
                   scale: 0,
                   opacity: 1,
                   x: 0,
-                  y: 0 
+                  y: 0,
                 }}
                 animate={{
                   scale: [0, 1, 0],
                   opacity: [1, 1, 0],
                   x: Math.random() * 400 - 200,
-                  y: Math.random() * 400 - 200
+                  y: Math.random() * 400 - 200,
                 }}
                 transition={{
                   duration: 1,
-                  delay: i * 0.05
+                  delay: i * 0.05,
                 }}
                 className="absolute top-1/2 left-1/2 w-2 h-2 bg-yellow-400 rounded-full pointer-events-none"
                 style={{
-                  boxShadow: '0 0 10px 2px yellow'
+                  boxShadow: "0 0 10px 2px yellow",
                 }}
               />
             ))}

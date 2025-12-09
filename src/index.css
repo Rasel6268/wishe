@@ -2,7 +2,7 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-pink-50 via-purple-50 to-rose-50 min-h-screen;
+    @apply bg-linear-to-br from-pink-50 via-purple-50 to-rose-50 min-h-screen;
     font-family: 'Noto Sans Bengali', 'Kalpurush', 'Siyam Rupali', sans-serif;
   }
 }
@@ -13,7 +13,7 @@
   }
   
   .love-vibe-bg {
-    @apply bg-gradient-to-br from-pink-100/20 via-rose-100/20 to-red-100/20;
+    @apply bg-linear-to-br from-pink-100/20 via-rose-100/20 to-red-100/20;
   }
 }
 

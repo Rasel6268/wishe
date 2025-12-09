@@ -1,160 +1,450 @@
-import { motion } from 'framer-motion'
-import { Gift, Cake, Star, Music, PartyPopper, Heart } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react';
+import '../../src/Cake.css';
+import AudioFile from "../assets/many.MP3";
 
-export default function WishesPage() {
-  const wishes = [
-    {
-      id: 1,
-      icon: <Cake className="text-pink-500" size={32} />,
-      title: "মিষ্টি শুভেচ্ছা",
-      description: "আপনার জন্মদিন মিষ্টি এবং আনন্দে পূর্ণ হোক!",
-      color: "from-pink-400 to-rose-400"
-    },
-    {
-      id: 2,
-      icon: <Star className="text-yellow-500" size={32} />,
-      title: "উজ্জ্বলভাবে জ্বলো",
-      description: "তুমি যেমন তারকা, তেমনি উজ্জ্বল থাকো!",
-      color: "from-yellow-400 to-orange-400"
-    },
-    {
-      id: 3,
-      icon: <Music className="text-purple-500" size={32} />,
-      title: "আনন্দময় মুহূর্ত",
-      description: "তোমার জীবন সর্বদা সুন্দর সঙ্গীতে পূর্ণ থাকুক!",
-      color: "from-purple-400 to-pink-400"
-    },
-    {
-      id: 4,
-      icon: <Gift className="text-rose-500" size={32} />,
-      title: "অনন্ত উপহার",
-      description: "জীবন তোমাকে অসীম সুখ উপহার দিক!",
-      color: "from-rose-400 to-red-400"
-    },
-    {
-      id: 5,
-      icon: <PartyPopper className="text-blue-500" size={32} />,
-      title: "উৎসব",
-      description: "প্রতিদিন তোমার জন্য উৎসব হোক!",
-      color: "from-blue-400 to-cyan-400"
-    },
-    {
-      id: 6,
-      icon: <Heart className="text-red-500" size={32} />,
-      title: "ভালোবাসা ও সুখ",
-      description: "ভালোবাসা ও সুখ সর্বদা তোমার সঙ্গী হোক!",
-      color: "from-red-400 to-pink-400"
+const EnhancedBirthdayCake = () => {
+  const [isCandleBlown, setIsCandleBlown] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
+  const [floatingEmojis, setFloatingEmojis] = useState([]);
+  const [audioPlaying, setAudioPlaying] = useState(false);
+  
+  const audioRef = useRef(null);
+  const celebrationSoundRef = useRef(null);
+
+  // ইমোজি সংগ্রহ
+  const celebrationEmojis = ['🎉', '🎊', '✨', '🌟', '🎈', '🎁', '🎂', '🍰', '🧁', '🎀', '💝', '💖', '💕', '🎇', '🎆', '🥳', '👏', '👍'];
+
+  const blowCandle = () => {
+  if (!isCandleBlown) {
+    setIsCandleBlown(true);
+    
+    // সেলিব্রেশন শুরু
+    startCelebration();
+    
+    // সেলিব্রেশন সাউন্ড প্লে
+    if (celebrationSoundRef.current) {
+      celebrationSoundRef.current.currentTime = 0;
+      celebrationSoundRef.current.play();
     }
-  ]
+    
+    // ব্যাকগ্রাউন্ড মিউজিক প্লে (নতুন অংশ)
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+      setAudioPlaying(true);
+    }
+    
+    // 6 সেকেন্ড পর ফায়ারওয়ার্কস বন্ধ
+    setTimeout(() => {
+      setShowFireworks(false);
+    }, 6000);
+  }
+};
+
+  const startCelebration = () => {
+    // ফায়ারওয়ার্কস দেখান
+    setShowFireworks(true);
+    setAudioPlaying(true)
+    // ভাসমান ইমোজি তৈরি
+    createFloatingEmojis();
+  };
+
+  const createFloatingEmojis = () => {
+    const newEmojis = [];
+    for (let i = 0; i < 25; i++) {
+      newEmojis.push({
+        id: i,
+        emoji: celebrationEmojis[Math.floor(Math.random() * celebrationEmojis.length)],
+        x: Math.random() * 100,
+        y: 110, // নিচ থেকে শুরু
+        speed: Math.random() * 2 + 1,
+        delay: Math.random() * 2,
+        size: Math.random() * 30 + 20,
+        rotation: Math.random() * 360
+      });
+    }
+    setFloatingEmojis(newEmojis);
+  };
+
+  const relightCandle = () => {
+    setIsCandleBlown(false);
+    setShowFireworks(false);
+    setFloatingEmojis([]);
+  };
+
+  const toggleAudio = () => {
+    setAudioPlaying(!audioPlaying);
+    if (audioRef.current) {
+      if (audioPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+    }
+  };
+
+  // ভাসমান ইমোজি অ্যানিমেশন
+  useEffect(() => {
+    if (floatingEmojis.length > 0) {
+      const interval = setInterval(() => {
+        setFloatingEmojis(prev => 
+          prev.map(emoji => ({
+            ...emoji,
+            y: emoji.y > -20 ? emoji.y - emoji.speed : 110,
+            rotation: emoji.rotation + 1
+          }))
+        );
+      }, 50);
+
+      return () => clearInterval(interval);
+    }
+  }, [floatingEmojis]);
+
+  // ফায়ারওয়ার্কস পার্টিকেল
+  const Fireworks = () => {
+    const [particles, setParticles] = useState([]);
+
+    useEffect(() => {
+      if (showFireworks) {
+        const colors = [
+          ['#FF6B6B', '#FFE66D'], // Red/Yellow
+          ['#4ECDC4', '#45B7D1'], // Cyan/Blue
+          ['#96CEB4', '#FFEAA7'], // Green/Yellow
+          ['#FFAAA5', '#FF8B94'], // Pink
+          ['#A8E6CF', '#DCEDC1']  // Mint/Green
+        ];
+
+        const newParticles = [];
+        for (let i = 0; i < 50; i++) {
+          const colorPair = colors[Math.floor(Math.random() * colors.length)];
+          newParticles.push({
+            id: i,
+            x: Math.random() * 100,
+            y: Math.random() * 100,
+            size: Math.random() * 8 + 4,
+            color1: colorPair[0],
+            color2: colorPair[1],
+            duration: Math.random() * 2 + 1,
+            delay: Math.random() * 1
+          });
+        }
+        setParticles(newParticles);
+
+        // প্রতি 1.5 সেকেন্ডে নতুন ফায়ারওয়ার্কস
+        const interval = setInterval(() => {
+          const colorPair = colors[Math.floor(Math.random() * colors.length)];
+          const burstParticles = [];
+          
+          for (let i = 0; i < 30; i++) {
+            burstParticles.push({
+              id: Date.now() + i,
+              x: Math.random() * 100,
+              y: Math.random() * 100,
+              size: Math.random() * 6 + 3,
+              color1: colorPair[0],
+              color2: colorPair[1],
+              duration: Math.random() * 2 + 1,
+              delay: 0
+            });
+          }
+          setParticles(prev => [...prev, ...burstParticles]);
+        }, 1500);
+
+        // পুরানো পার্টিকেল রিমুভ
+        const cleanupInterval = setInterval(() => {
+          setParticles(prev => prev.filter(p => p.id > Date.now() - 3000));
+        }, 1000);
+
+        return () => {
+          clearInterval(interval);
+          clearInterval(cleanupInterval);
+        };
+      }
+    }, [showFireworks]);
+
+    return (
+      <>
+        {particles.map(particle => (
+          <div
+            key={particle.id}
+            className="absolute pointer-events-none"
+            style={{
+              left: `${particle.x}%`,
+              top: `${particle.y}%`,
+              width: `${particle.size}px`,
+              height: `${particle.size}px`,
+              background: `radial-gradient(circle, ${particle.color1}, ${particle.color2})`,
+              borderRadius: '50%',
+              animation: `particle-explode ${particle.duration}s ease-out ${particle.delay}s forwards`,
+              boxShadow: `0 0 ${particle.size}px ${particle.color1}`
+            }}
+          />
+        ))}
+      </>
+    );
+  };
 
   return (
-    <div className="min-h-screen p-4 pt-20 pb-32">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="max-w-7xl mx-auto"
-      >
-        {/* হেডার */}
-        <div className="text-center mb-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="inline-flex items-center gap-3 mb-4"
-          >
-            <Gift className="text-pink-500" size={32} />
-            <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-              জন্মদিনের শুভেচ্ছা
-            </h1>
-            <PartyPopper className="text-yellow-500" size={32} />
-          </motion.div>
-          <p className="text-gray-600 text-lg">একজন বিশেষ মানুষের জন্য বিশেষ শুভেচ্ছা!</p>
-        </div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-linear-to-b from-purple-900 via-purple-800 to-black p-4 relative overflow-hidden">
+      {/* ফায়ারওয়ার্কস ব্যাকগ্রাউন্ড */}
+      {showFireworks && <Fireworks />}
 
-        {/* শুভেচ্ছা গ্রিড */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {wishes.map((wish, index) => (
-            <motion.div
-              key={wish.id}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -10 }}
-              className={`bg-linear-to-br ${wish.color} rounded-2xl p-8 text-white shadow-2xl relative overflow-hidden group`}
-            >
-              {/* ব্যাকগ্রাউন্ড প্যাটার্ন */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0 pattern-dots pattern-white pattern-size-4" />
-              </div>
-              
-              <div className="relative z-10">
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="mb-4"
-                >
-                  {wish.icon}
-                </motion.div>
-                
-                <h3 className="text-2xl font-bold mb-3">{wish.title}</h3>
-                <p className="text-white/90">{wish.description}</p>
-                
-                <motion.div
-                  className="mt-6"
-                  initial={{ width: 0 }}
-                  whileInView={{ width: "100%" }}
-                  transition={{ delay: 0.5 }}
-                >
-                  <div className="h-1 bg-white/30 rounded-full overflow-hidden">
-                    <div className="h-full bg-white animate-pulse" style={{ width: '70%' }} />
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* ইন্টারেক্টিভ শুভেচ্ছা কেক */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="glass-card rounded-2xl p-8 max-w-2xl mx-auto text-center"
+      {/* ভাসমান ইমোজি */}
+      {floatingEmojis.map(emoji => (
+        <div
+          key={emoji.id}
+          className="absolute pointer-events-none"
+          style={{
+            left: `${emoji.x}%`,
+            top: `${emoji.y}%`,
+            fontSize: `${emoji.size}px`,
+            transform: `rotate(${emoji.rotation}deg)`,
+            animation: `float-up ${emoji.speed + 3}s ease-in ${emoji.delay}s infinite`,
+            filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.5))'
+          }}
         >
-          <h3 className="text-2xl font-bold text-gray-800 mb-6">একটি শুভেচ্ছা করুন!</h3>
-          
-          <div className="relative w-48 h-48 mx-auto mb-6">
-            {/* কেক লেয়ার */}
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2">
-              {/* কেক বেস */}
-              <div className="w-32 h-8 bg-linear-to-r from-yellow-400 to-orange-400 rounded-t-lg" />
-              <div className="w-36 h-10 bg-linear-to-r from-pink-400 to-rose-400 rounded-t-lg" />
-              <div className="w-40 h-12 bg-linear-to-r from-white to-pink-100 rounded-t-lg" />
-              
-              {/* মোমবাতি */}
-              <div className="flex justify-center gap-2 absolute -top-4 left-1/2 transform -translate-x-1/2">
-                {[...Array(3)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1, repeat: Infinity, delay: i * 0.3 }}
-                    className="w-1 h-8 bg-linear-to-t from-red-500 to-yellow-500 rounded-t"
-                  />
-                ))}
-              </div>
+          {emoji.emoji}
+        </div>
+      ))}
+
+      {/* অডিও কন্ট্রোল */}
+      <div className="absolute top-4 right-4 z-50">
+        {/* <button
+          onClick={toggleAudio}
+          className="bg-linear-to-r from-pink-500 to-purple-600 text-white p-3 rounded-full shadow-lg hover:scale-110 transition-transform disabled:cursor-not-allowed"
+        >
+          {audioPlaying ? '🔇' : '🎵'}
+        </button> */}
+        <audio ref={audioRef} loop>
+          <source src={AudioFile} type="audio/mpeg" />
+        </audio>
+        <audio ref={celebrationSoundRef}>
+          <source src="https://assets.mixkit.co/sfx/preview/mixkit-party-horn-sound-2927.mp3" type="audio/mpeg" />
+        </audio>
+      </div>
+
+      <div className="mb-8 text-center z-10">
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 animate-pulse">
+          Happy Birthday! 🎂
+        </h1>
+        <p className="text-xl text-purple-200">Click the candle to blow it out and start celebration!</p>
+        
+        {isCandleBlown && (
+          <div className="mt-4 animate-bounce">
+            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-linear-to-r from-yellow-400 via-pink-500 to-purple-600 rounded-full">
+              <span className="text-2xl">🎉</span>
+              <span className="text-white font-bold">Celebration Time!</span>
+              <span className="text-2xl">🎊</span>
             </div>
           </div>
+        )}
+      </div>
+
+      {/* Birthday Cake Container */}
+      <div className="relative w-80 h-96 z-10">
+        {/* Cake Base */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-64 h-40">
+          {/* Cake Layer 3 (Bottom) */}
+          <div className="absolute bottom-0 left-0 w-full h-16 bg-linear-to-r from-pink-300 via-pink-400 to-pink-300 rounded-t-lg shadow-lg"></div>
           
-          <p className="text-gray-600 mb-4">মোমবাতি ফুঁক দিন এবং আপনার শুভেচ্ছা করুন!</p>
+          {/* Cake Layer 2 (Middle) */}
+          <div className="absolute bottom-16 left-2 w-60 h-14 bg-linear-to-r from-purple-300 via-purple-400 to-purple-300 rounded-t-lg shadow-lg"></div>
           
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-3 rounded-xl font-semibold flex items-center gap-2 mx-auto"
-          >
-            <Heart size={20} />
-            জন্মদিনের শুভেচ্ছা পাঠান
-          </motion.button>
-        </motion.div>
-      </motion.div>
+          {/* Cake Layer 1 (Top) */}
+          <div className="absolute bottom-28 left-4 w-56 h-12 bg-linear-to-r from-blue-300 via-blue-400 to-blue-300 rounded-t-lg shadow-lg"></div>
+          
+          {/* Cake Topping - Cream */}
+          <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 w-48 h-4 bg-white rounded-full opacity-90"></div>
+          
+          {/* Cake Topping - Drips */}
+          <div className="absolute bottom-40 left-8 w-3 h-6 bg-white rounded-b-full"></div>
+          <div className="absolute bottom-40 right-8 w-3 h-6 bg-white rounded-b-full"></div>
+          <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 w-3 h-8 bg-white rounded-b-full"></div>
+          
+          {/* Sprinkles */}
+          <div className="absolute bottom-44 left-12 w-2 h-2 bg-yellow-400 rounded-full"></div>
+          <div className="absolute bottom-44 right-16 w-2 h-2 bg-red-400 rounded-full"></div>
+          <div className="absolute bottom-44 left-1/2 w-2 h-2 bg-green-400 rounded-full"></div>
+          <div className="absolute bottom-44 left-20 w-2 h-2 bg-blue-400 rounded-full"></div>
+          <div className="absolute bottom-44 right-24 w-2 h-2 bg-pink-400 rounded-full"></div>
+          
+          {/* আইসক্রিম টপিং */}
+          <div className="absolute bottom-36 left-1/4 transform -translate-x-1/2">
+            <div className="w-8 h-12 bg-linear-to-b from-pink-200 to-pink-300 rounded-full"></div>
+            <div className="w-6 h-4 bg-linear-to-b from-yellow-200 to-yellow-300 rounded-full -mt-1 ml-1"></div>
+          </div>
+          
+          <div className="absolute bottom-36 right-1/4 transform translate-x-1/2">
+            <div className="w-8 h-12 bg-linear-to-b from-blue-200 to-blue-300 rounded-full"></div>
+            <div className="w-6 h-4 bg-linear-to-b from-green-200 to-green-300 rounded-full -mt-1 mr-1"></div>
+          </div>
+        </div>
+
+        {/* Candle */}
+        <div 
+          className="absolute top-32 left-1/2 transform -translate-x-1/2 cursor-pointer hover:scale-105 transition-transform"
+          onClick={blowCandle}
+        >
+          {/* Candle Stick */}
+          <div className="relative w-4 h-24 mx-auto">
+            {/* Candle Body */}
+            <div className="absolute inset-0 bg-linear-to-b from-yellow-100 via-yellow-200 to-yellow-100 rounded-t-lg"></div>
+            
+            {/* Candle Stripes */}
+            <div className="absolute top-4 left-0 w-full h-1 bg-red-400"></div>
+            <div className="absolute top-12 left-0 w-full h-1 bg-red-400"></div>
+            <div className="absolute top-20 left-0 w-full h-1 bg-red-400"></div>
+            
+            {/* Candle Tip (Melted wax) */}
+            <div className="absolute -top-2 left-0 w-6 h-4 bg-yellow-300 rounded-full transform -translate-x-1"></div>
+            <div className="absolute -top-1 right-0 w-5 h-3 bg-yellow-300 rounded-full"></div>
+            
+            {/* Candle Flame */}
+            {!isCandleBlown ? (
+              <div className="absolute -top-16 left-1/2 transform -translate-x-1/2">
+                {/* Flame Core */}
+                <div className="flame-core"></div>
+                
+                {/* Main Flame */}
+                <div className="flame-main"></div>
+                
+                {/* Flame Glow Effect */}
+                <div className="flame-glow"></div>
+                
+                {/* Sparks */}
+                <div className="spark spark-1"></div>
+                <div className="spark spark-2"></div>
+                <div className="spark spark-3"></div>
+              </div>
+            ) : (
+              /* Smoke after blowing */
+              <div className="absolute -top-20 left-1/2 transform -translate-x-1/2">
+                <div className="smoke smoke-1"></div>
+                <div className="smoke smoke-2"></div>
+                <div className="smoke smoke-3"></div>
+                <div className="text-white text-xs mt-2 text-center animate-pulse">🎉 Blown! 🎉</div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Cake Plate */}
+        <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-72 h-6 bg-linear-to-r from-gray-300 via-gray-400 to-gray-300 rounded-full shadow-xl"></div>
+        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-76 h-2 bg-linear-to-r from-gray-400 via-gray-500 to-gray-400 rounded-full"></div>
+      </div>
+
+      {/* Controls */}
+      <div className="mt-12 space-x-4 space-y-4 md:space-y-0 flex flex-col md:flex-row z-10">
+        <button
+          onClick={relightCandle}
+          className="px-6 py-3 bg-linear-to-r from-blue-500 to-cyan-600 text-white font-semibold rounded-full hover:from-blue-600 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2 cursor-pointer"
+        >
+          <span className="text-xl">🔥</span>
+          <span>Relight Candle</span>
+        </button>
+        <button
+          onClick={blowCandle}
+          disabled={isCandleBlown}
+          className={`px-6 py-3 text-white font-semibold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2 cursor-pointer ${
+            isCandleBlown 
+              ? 'bg-linear-to-r from-gray-500 to-gray-600 cursor-not-allowed' 
+              : 'bg-linear-to-r from-red-500 to-pink-600'
+          }`}
+        >
+          <span className="text-xl">💨</span>
+          <span>{isCandleBlown ? 'Candle Blown!' : 'Blow Candle'}</span>
+        </button>
+        <button
+          onClick={startCelebration}
+          className="px-6 py-3 bg-linear-to-r from-purple-500 to-indigo-600 text-white font-semibold rounded-full hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center space-x-2 cursor-pointer"
+        >
+          <span className="text-xl">🎆</span>
+          <span>Start Fireworks</span>
+        </button>
+      </div>
+
+      {/* Instructions */}
+      <div className="mt-8 text-center text-white/80 z-10">
+        <p className="text-lg">✨ Click the candle flame to blow it out and start the celebration!</p>
+        <p className="text-sm mt-2">Fireworks, floating emojis, and celebration sounds will play</p>
+        
+        <div className="flex flex-wrap justify-center gap-2 mt-4">
+          {['🎂', '🎁', '🎈', '🎊', '🎉', '✨', '🌟', '🎆'].map((emoji, index) => (
+            <span key={index} className="text-2xl animate-bounce" style={{animationDelay: `${index * 0.1}s`}}>
+              {emoji}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Celebration Info */}
+      {showFireworks && (
+        <div className="mt-6 p-4 bg-linear-to-r from-pink-500/20 to-purple-500/20 rounded-2xl backdrop-blur-sm z-10 animate-pulse">
+          <div className="flex items-center justify-center space-x-2">
+            <span className="text-2xl">🥳</span>
+            <span className="text-white font-bold">Celebration in Progress!</span>
+            <span className="text-2xl">🎊</span>
+          </div>
+          <p className="text-sm text-center text-gray-200 mt-1">Enjoy the fireworks and floating emojis!</p>
+        </div>
+      )}
+
+      {/* CSS এনিমেশন */}
+      <style jsx>{`
+        @keyframes particle-explode {
+          0% {
+            opacity: 1;
+            transform: scale(0.5) translate(0, 0);
+          }
+          100% {
+            opacity: 0;
+            transform: scale(1.5) translate(var(--tx, 0), var(--ty, 0));
+          }
+        }
+        
+        @keyframes float-up {
+          0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-100vh) rotate(360deg);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes bounce {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+        
+        .animate-bounce {
+          animation: bounce 1s infinite;
+        }
+        
+        .animate-pulse {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
+        }
+        
+        .backdrop-blur-sm {
+          backdrop-filter: blur(8px);
+        }
+      `}</style>
     </div>
-  )
-}
+  );
+};
+
+export default EnhancedBirthdayCake;
