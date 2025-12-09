@@ -12,14 +12,12 @@ const DynamicTimeBirthdayWish = () => {
   const [moonPhase, setMoonPhase] = useState(0);
   const [audioPlaying, setAudioPlaying] = useState(true); // Changed to true for auto-play
   const [giftModal, setGiftModal] = useState({ show: false, giftId: null });
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const audioRef = useRef(null);
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
-  const nextPage = () => [
-    navigate('/wishes')
-  ]
+  const nextPage = () => [navigate("/wishes")];
 
   // সময় ভিত্তিক সিন
   const scenes = [
@@ -69,34 +67,34 @@ const DynamicTimeBirthdayWish = () => {
   const secretGifts = [
     {
       id: 1,
-      emoji: "💝",
-      title: "বিশেষ ভালোবাসা",
+      emoji: "📝",
+      title: "ডাউটের আলো",
       message:
-        "তোমার জন্য আমার সবচেয়ে খাঁটি ভালোবাসা। এই জন্মদিনে প্রতিটি মুহূর্ত যেন হয়ে উঠুক সোনালি স্মৃতি।",
+        "মাঝে মাঝে আমি কিছু বিষয় নিয়ে ডাউট থাকি, সেই ডাউট গুলো তোর সাথে শেয়ার করলে তুই খুবই সুন্দর করে বিষয়টা বুঝিয়ে দিস, খুবই ক্রিটিকাল বিষয়গুলো তুলে ধরিস যেটা আমি ধরতে পারি না।",
       color: "from-red-100 to-pink-100",
     },
     {
       id: 2,
-      emoji: "📜",
-      title: "গোপন বার্তা",
+      emoji: "🌸",
+      title: "শান্ত লক্ষ্মী মেয়ের জন্য",
       message:
-        "আজকের দিনটি শুধু তোর, সম্পূর্ণ তোর প্রতিটি হাসি যেন ছড়িয়ে পড়ে চারপাশে আলোর মতো।",
-      color: "from-amber-100 to-yellow-100",
+        "তুই খুবই লক্ষ্মী একটা মেয়ে। তোর মতো স্বাধীনচেতা মেয়ে আমি খুবই কম দেখেছি।\nতুই যেরকম আছিস, সারা জীবন যেন এরকম শান্ত, লক্ষ্মী মেয়ের মতোই থাকিস।",
+      color: "from-white to-rose-100",
     },
     {
-      id: 3,
-      emoji: "🔐",
-      title: "মনের কথা",
+      id: 9,
+      emoji: "💡",
+      title: "ইউনিক চিন্তাভাবনা",
       message:
-        "তোর হাসি দেখলে আমার মন ভরে যায়। তোমার সুখই আমার সবচেয়ে বড় কামনা।",
-      color: "from-blue-100 to-cyan-100",
+        "তোর চিন্তাভাবনাগুলো খুবই ইউনিক। বাস্তববাদী যেখানে ইমোশন থাকলেও সেটা বাস্তবতার সাথে সুন্দরভাবে সামঞ্জস্যপূর্ণ থাকে।",
+      color: "from-yellow-100 to-amber-100",
     },
     {
       id: 4,
       emoji: "🎊",
-      title: "উৎসবের আনন্দ",
+      title: "বিশ্বাস ও সৌম্যতা",
       message:
-        "জন্মদিন শুধু তারিখ নয়, এটি একটি নতুন সুযোগের শুরু। নতুন করে স্বপ্ন দেখা আর তা বাস্তবায়নের দিন।",
+        "ছেলেদের প্রতি কিছুটা বিশ্বাস বাড়িয়ে দেখতে পারোস । তোর সাথে কথা বলে জানি না কেন, ছেলেদের প্রতি আলাদা পূর্ব শত্রুতা আছে। আমি জানি না।",
       color: "from-green-100 to-emerald-100",
     },
     {
@@ -104,17 +102,10 @@ const DynamicTimeBirthdayWish = () => {
       emoji: "🧿",
       title: "শুভকামনা",
       message:
-        "বিধাতার কাছে এই প্রার্থনা - তোর জীবন যেন সুখের সাগরে ভাসে, দুঃখ কষ্ট যেন থাকে দূরে।",
+        "আমার প্রার্থনা, তোর জীবন যেন সুখে ভরে থাকে। বন্ধু হিসেবে তোর হাসি সবসময় পাশে থাকুক।",
       color: "from-purple-100 to-violet-100",
-    },
-    {
-      id: 6,
-      emoji: "🎨",
-      title: "রঙিন জীবন",
-      message:
-        "ফুলে ফুলে ভরে যাক তোর ভুবন, রংধনুর মতো সাত রং এ রাঙ্গুক তোর জীবন।",
-      color: "from-pink-100 to-rose-100",
-    },
+    }
+    
   ];
 
   // পাপড়ি তৈরি
@@ -276,7 +267,8 @@ const DynamicTimeBirthdayWish = () => {
     const playAudio = () => {
       if (audioRef.current) {
         audioRef.current.volume = 0.7; // Set volume to 70%
-        audioRef.current.play()
+        audioRef.current
+          .play()
           .then(() => {
             setAudioPlaying(true);
             console.log("Audio started playing automatically");
@@ -295,7 +287,8 @@ const DynamicTimeBirthdayWish = () => {
     // If autoplay fails, try again after user interaction
     const handleUserInteraction = () => {
       if (!audioPlaying && audioRef.current) {
-        audioRef.current.play()
+        audioRef.current
+          .play()
           .then(() => {
             setAudioPlaying(true);
           })
@@ -306,14 +299,14 @@ const DynamicTimeBirthdayWish = () => {
     };
 
     // Add event listeners for user interaction
-    document.addEventListener('click', handleUserInteraction);
-    document.addEventListener('keydown', handleUserInteraction);
-    document.addEventListener('touchstart', handleUserInteraction);
+    document.addEventListener("click", handleUserInteraction);
+    document.addEventListener("keydown", handleUserInteraction);
+    document.addEventListener("touchstart", handleUserInteraction);
 
     return () => {
-      document.removeEventListener('click', handleUserInteraction);
-      document.removeEventListener('keydown', handleUserInteraction);
-      document.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener("click", handleUserInteraction);
+      document.removeEventListener("keydown", handleUserInteraction);
+      document.removeEventListener("touchstart", handleUserInteraction);
     };
   }, []);
 
@@ -441,7 +434,8 @@ const DynamicTimeBirthdayWish = () => {
                 audioRef.current.pause();
                 setAudioPlaying(false);
               } else {
-                audioRef.current.play()
+                audioRef.current
+                  .play()
                   .then(() => {
                     setAudioPlaying(true);
                   })
@@ -652,9 +646,11 @@ const DynamicTimeBirthdayWish = () => {
             <div className="backdrop-blur-md bg-white/30 rounded-2xl p-6 border border-white/30">
               <div className="text-center mb-4">
                 <div className="text-4xl mb-2">🎁</div>
-                <h4 className="font-bold text-lg text-gray-800">গোপন উপহার</h4>
+                <h4 className="font-bold text-lg text-gray-800">
+                  তোকে আমার কিছু অবজারবেশন
+                </h4>
                 <p className="text-sm text-gray-600 mt-1">
-                  ক্লিক করে দেখুন বিশেষ বার্তা
+                  ক্লিক করে দেখ আমর কিছু অবজারবেশন
                 </p>
               </div>
 
@@ -671,7 +667,7 @@ const DynamicTimeBirthdayWish = () => {
                       }`}
                     >
                       {gift.emoji}
-                    </div>
+                    </div> 
                     <div className="text-xs text-gray-700 mt-1">
                       {gift.title}
                     </div>
@@ -700,12 +696,12 @@ const DynamicTimeBirthdayWish = () => {
                   {currentGift.emoji}
                 </div>
 
-                <h3 className="text-2xl font-bold mb-2 text-gray-800">
+                <h3 className="text-2xl font-bold mb-2 text-white">
                   {currentGift.title}
                 </h3>
                 <div className="w-16 h-1 bg-linear-to-r from-rose-500 to-pink-500 mx-auto mb-4 rounded-full"></div>
 
-                <div className="bengali-text text-lg mb-6 p-4 bg-white/20 rounded-xl border border-white/30">
+                <div className="bengali-text text-lg mb-6 p-4 bg-gray-100 rounded-xl border border-white/30">
                   {currentGift.message}
                 </div>
 

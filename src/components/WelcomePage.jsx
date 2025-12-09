@@ -238,7 +238,7 @@ const WelcomePage = ({ onEnter }) => {
                     তানজিনা রিপা
                   </h2>
                   <p className="text-xl text-white/80 mt-2">
-                    জন্মদিনের বিশেষ বন্ধু!
+                    জন্মদিনের শুভেচ্ছা!!
                   </p>
                   <div className="absolute -top-3 -left-3 w-6 h-6 bg-yellow-400 rounded-full animate-pulse"></div>
                   <div className="absolute -top-3 -right-3 w-6 h-6 bg-pink-400 rounded-full animate-pulse delay-300"></div>
@@ -255,7 +255,7 @@ const WelcomePage = ({ onEnter }) => {
                 className="mb-12"
               >
                 <p className="text-2xl md:text-3xl text-white/90 mb-6 font-light">
-                  আপনার জন্য অপেক্ষা করছে একটি বিশেষ জন্মদিন উদযাপন!
+                  তোর জন্য অপেক্ষা করছে একটি বিশেষ জন্মদিন উপহার !
                 </p>
                 <div className="flex justify-center space-x-4 text-4xl">
                   <motion.span
@@ -363,7 +363,7 @@ const WelcomePage = ({ onEnter }) => {
                 transition={{ delay: 2.5 }}
                 className="mt-8 text-white/70 text-lg"
               >
-                উদযাপন শুরু করতে বাটনে ক্লিক করুন!
+                উদযাপন শুরু করতে এখানে ক্লিক কর ! 
               </motion.p>
             </motion.div>
 
